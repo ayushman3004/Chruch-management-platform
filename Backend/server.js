@@ -19,81 +19,46 @@ dotenv.config();
 const app = express();
 
 /* =========================================================
-   TRUST PROXY (REQUIRED for Render behind HTTPS)
+   TRUST PROXY (REQUIRED for Render)
 ========================================================= */
 app.set("trust proxy", 1);
 
 /* =========================================================
-   CORS CONFIG (WORKS FOR ALL VERCEL DOMAINS)
+   CORS (ONLY THIS – NO MANUAL HEADERS)
 ========================================================= */
-const allowedOrigins = [
-  "https://ecclesia-vert.vercel.app"
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    origin: "https://ecclesia-vert.vercel.app",
+    credentials: true
   })
 );
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-// 🔥 FORCE PREFLIGHT TO PASS
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Origin", "https://ecclesia-vert.vercel.app");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    return res.sendStatus(200);
-  }
-  next();
-});
-app.options("*", cors());
-// app.options("*", cors());
+
 /* =========================================================
    BODY PARSERS
 ========================================================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 /* =========================================================
-   SESSION CONFIG (CROSS-DOMAIN SAFE)
+   SESSION CONFIG
 ========================================================= */
 app.use(
-   session({
-      name: "ecclesia.sid",
-      secret: process.env.SESSION_SECRET || "supersecretkey",
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore.create({
-         mongoUrl: process.env.MONGO_URI,
-         collectionName: "sessions",
-      }),
-      cookie: {
-         httpOnly: true,
-         secure: true,       // REQUIRED for HTTPS
-         sameSite: "none",   // REQUIRED for cross-site cookies
-         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      },
-   })
+  session({
+    name: "ecclesia.sid",
+    secret: process.env.SESSION_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions"
+    }),
+    cookie: {
+      httpOnly: true,
+      secure: true,     // HTTPS only (Render)
+      sameSite: "none", // Required for cross-domain
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    }
+  })
 );
 
 /* =========================================================
@@ -123,5 +88,5 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
