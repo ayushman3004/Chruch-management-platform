@@ -21,6 +21,10 @@ const app = express();
 app.use(express.json());
 
 // CORS for frontend
+// TRUST PROXY (REQUIRED for Render behind HTTPS)
+app.set("trust proxy", 1);
+
+// CORS for frontend
 app.use(
   cors({
     origin: [
@@ -32,15 +36,19 @@ app.use(
       "http://localhost:5178",
       "http://localhost:5179",
       "http://localhost:5180",
-      "http://localhost:5181"
+      "http://localhost:5181",
+      "https://ecclesia-git-main-ayushman3004s-projects.vercel.app",
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 // Session configuration
 app.use(
   session({
+    name: "sessionId",
     secret: process.env.SESSION_SECRET || "supersecretkey",
     resave: false,
     saveUninitialized: false,
@@ -50,9 +58,9 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: false, // change to true when using HTTPS
+      secure: true,        // ✅ MUST be true for HTTPS (Render + Vercel)
+      sameSite: "none",    // ✅ REQUIRED for cross-site cookies
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      sameSite: "lax",
     },
   })
 );
