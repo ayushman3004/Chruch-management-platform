@@ -37,6 +37,13 @@ export const AuthProvider = ({ children }) => {
             setUser(data.user);
             return { success: true, user: data.user };
         } catch (error) {
+            // Check for network error (no response)
+            if (!error.response) {
+                return {
+                    success: false,
+                    error: 'Unable to reach server. Please check your connection or try again later.'
+                };
+            }
             return {
                 success: false,
                 error: error.response?.data?.message || 'Invalid email or password'
