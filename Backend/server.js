@@ -26,30 +26,43 @@ app.set("trust proxy", 1);
 /* =========================================================
    CORS CONFIG (WORKS FOR ALL VERCEL DOMAINS)
 ========================================================= */
-const corsOptions = {
-   origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (origin.startsWith("http://localhost")) return callback(null, true);
-      if (origin.endsWith(".vercel.app")) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
-   },
-   credentials: true,
-};
+const allowedOrigins = [
+  "https://ecclesia-vert.vercel.app"
+];
 
-app.use(cors(corsOptions));
-
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+app.options("*", cors());
+// app.options("*", cors());
 /* =========================================================
    BODY PARSERS
 ========================================================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 /* =========================================================
    SESSION CONFIG (CROSS-DOMAIN SAFE)
 ========================================================= */
 app.use(
    session({
-      name: "sessionId",
+      name: "ecclesia.sid",
       secret: process.env.SESSION_SECRET || "supersecretkey",
       resave: false,
       saveUninitialized: false,
