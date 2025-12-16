@@ -3,6 +3,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import cors from "cors";
 import dotenv from "dotenv";
+
 import dbConnect from "./config/dbConfig.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -17,35 +18,48 @@ dotenv.config();
 
 const app = express();
 
-// JSON Parsing
-app.use(express.json());
-
-// CORS for frontend
-// TRUST PROXY (REQUIRED for Render behind HTTPS)
+/* =========================================================
+   TRUST PROXY (REQUIRED for Render behind HTTPS)
+========================================================= */
 app.set("trust proxy", 1);
 
-// CORS for frontend
+/* =========================================================
+   CORS CONFIG (WORKS FOR ALL VERCEL DOMAINS)
+========================================================= */
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:5175",
-      "http://localhost:5176",
-      "http://localhost:5177",
-      "http://localhost:5178",
-      "http://localhost:5179",
-      "http://localhost:5180",
-      "http://localhost:5181",
-      "https://ecclesia-git-main-ayushman3004s-projects.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      // Allow server-to-server / Postman
+      if (!origin) return callback(null, true);
+
+      // Allow localhost (dev)
+      if (origin.startsWith("http://localhost")) {
+        return callback(null, true);
+      }
+
+      // Allow ALL Vercel deployments (preview + production)
+      if (origin.endsWith(".vercel.app")) {
+        return callback(null, true);
+      }
+
+      // Block everything else
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Session configuration
+/* =========================================================
+   BODY PARSERS
+========================================================= */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* =========================================================
+   SESSION CONFIG (CROSS-DOMAIN SAFE)
+========================================================= */
 app.use(
   session({
     name: "sessionId",
@@ -58,18 +72,21 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: true,        // ✅ MUST be true for HTTPS (Render + Vercel)
-      sameSite: "none",    // ✅ REQUIRED for cross-site cookies
+      secure: true,       // REQUIRED for HTTPS
+      sameSite: "none",   // REQUIRED for cross-site cookies
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
 );
 
-// Database connection
+/* =========================================================
+   DATABASE CONNECTION
+========================================================= */
 dbConnect();
 
-// Trigger restart
-// Routes
+/* =========================================================
+   ROUTES
+========================================================= */
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
@@ -78,9 +95,14 @@ app.use("/api/donations", donationRoutes);
 app.use("/api/service-plans", servicePlanRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// Error Middleware
+/* =========================================================
+   ERROR HANDLER
+========================================================= */
 app.use(errorMiddleware);
 
+/* =========================================================
+   START SERVER
+========================================================= */
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
