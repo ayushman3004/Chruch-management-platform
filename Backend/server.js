@@ -26,30 +26,44 @@ app.set("trust proxy", 1);
 /* =========================================================
    CORS CONFIG (WORKS FOR ALL VERCEL DOMAINS)
 ========================================================= */
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow server-to-server / Postman
-      if (!origin) return callback(null, true);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://ecclesia-git-main-ayushman3004s-projects.vercel.app",
+  "https://chruch-management-platform.onrender.com"
+];
 
-      // Allow localhost (dev)
-      if (origin.startsWith("http://localhost")) {
-        return callback(null, true);
-      }
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow server-to-server / Postman
+    if (!origin) return callback(null, true);
 
-      // Allow ALL Vercel deployments (preview + production)
-      if (origin.endsWith(".vercel.app")) {
-        return callback(null, true);
-      }
+    // Allow localhost (dev)
+    if (origin.startsWith("http://localhost")) {
+      return callback(null, true);
+    }
 
-      // Block everything else
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+    // Allow specific origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow ALL Vercel deployments (preview + production)
+    if (origin.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    // Block everything else
+    console.error(`Blocked CORS for origin: ${origin}`);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 /* =========================================================
    BODY PARSERS
