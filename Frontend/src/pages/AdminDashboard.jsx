@@ -256,7 +256,7 @@ const AdminDashboard = () => {
                                             className="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-8">
-                                            <h2 className="text-3xl font-bold text-white mb-2">Welcome to Ecclesia Admin</h2>
+                                            <h2 className="text-3xl font-bold text-white mb-2">Welcome to Ecclesia Admin Dashboard Page</h2>
                                             <p className="text-slate-300 max-w-2xl">
                                                 Manage your community, track donations, and oversee events all in one place.
                                                 Select a tab from the sidebar to get started.
