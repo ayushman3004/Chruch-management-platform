@@ -272,7 +272,7 @@ const Home = () => {
             {/* Hero Section */}
             <header className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
                 <div className="absolute inset-0 z-0">
-                    <img src={heroImg} alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
+                    <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/292000/292459-Church-Of-All-Nations.jpg" alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
                     <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/80 to-slate-950"></div>
                 </div>
 
