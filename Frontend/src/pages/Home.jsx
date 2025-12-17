@@ -272,7 +272,7 @@ const Home = () => {
             {/* Hero Section */}
             <header className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
                 <div className="absolute inset-0 z-0">
-                    <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/292000/292459-Church-Of-All-Nations.jpg" alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
+                    <img src="https://wallpapers.com/images/featured/jesus-christ-pictures-k9zma9r88k98f74o.jpg" alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
                     <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/80 to-slate-950"></div>
                 </div>
 
@@ -298,9 +298,6 @@ const Home = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                         <Link to="/register" className="w-full sm:w-auto px-8 py-4 bg-white text-slate-950 font-bold rounded-full text-lg shadow-xl shadow-white/10 hover:bg-slate-100 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
                             Join Our Community <FiArrowRight />
-                        </Link>
-                        <Link to="/about" className="w-full sm:w-auto px-8 py-4 bg-white/5 text-white font-semibold rounded-full text-lg backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                            Watch Video
                         </Link>
                     </div>
                 </div>
@@ -363,7 +360,7 @@ const Home = () => {
                     <div className="relative">
                         <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 rounded-3xl blur-2xl transform rotate-6 scale-95"></div>
                         <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 group">
-                            <img src={communityImg} alt="Community Gathering" className="w-full h-auto transform group-hover:scale-105 transition-transform duration-700" />
+                            <img src="https://wallpapers.com/images/featured/jesus-christ-pictures-k9zma9r88k98f74o.jpg" alt="Community Gathering" className="w-full h-auto transform group-hover:scale-105 transition-transform duration-700" />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent flex items-end p-8">
                                 <div className="text-white">
                                     <p className="font-semibold text-lg">Sunday Gathering</p>
