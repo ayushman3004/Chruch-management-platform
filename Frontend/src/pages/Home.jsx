@@ -108,7 +108,7 @@ const Home = () => {
                 {/* Background Image */}
                 <div className="fixed inset-0 z-0">
                     <img
-                        src={homeBg}
+                        src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/d5/6c/a8/photo1jpg.jpg?w=900&h=500&s=1"
                         alt="Background"
                         className="w-full h-full object-cover opacity-60 animate-slow-zoom"
                     />
