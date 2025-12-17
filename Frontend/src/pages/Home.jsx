@@ -272,7 +272,7 @@ const Home = () => {
             {/* Hero Section */}
             <header className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
                 <div className="absolute inset-0 z-0">
-                    <img src="https://wallpapers.com/images/featured/jesus-christ-pictures-k9zma9r88k98f74o.jpg" alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
+                    <img src="https://www.newhollandwood.com/wp-content/uploads/2019/10/1-Monastery-of-the-Holy-Cross-Chicago.jpg" alt="Modern Church" className="w-full h-full object-cover scale-105 animate-slow-zoom" />
                     <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/80 to-slate-950"></div>
                 </div>
 
