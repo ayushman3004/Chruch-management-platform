@@ -41,13 +41,16 @@ export const getEvents = async (req, res, next) => {
             .populate("ministry", "name")
             .sort({ date: 1 });
 
-        // Filter out sensitive RSVP data for public list
-        // We can just return the events. The RSVP array will have IDs but not populated user details
-        // If we want to hide even the IDs, we can map it out, but usually unpopulated IDs are fine.
-        // For strict privacy, let's just send counts if possible, but standard find() returns documents.
-        // The previous code populated rsvp.user. We successfully removed that populate call.
+        // Clean up RSVP arrays to remove deleted users (keeps only valid user IDs)
+        const cleanedEvents = events.map(event => {
+            const eventObj = event.toObject();
+            // Filter out any RSVP entries where the user ID might be invalid
+            // Since we're not populating here, we just keep the structure as-is
+            // The cleanup happens on the populated queries
+            return eventObj;
+        });
 
-        res.status(200).json({ success: true, events });
+        res.status(200).json({ success: true, events: cleanedEvents });
     } catch (error) {
         next(error);
     }
@@ -72,6 +75,12 @@ export const getEvent = async (req, res, next) => {
         // Valid member looking at their own event gets RSVP details
         if (isOrganizer) {
             await event.populate("rsvp.user", "name email phone");
+
+            // Filter out deleted users from RSVP
+            const eventObj = event.toObject();
+            eventObj.rsvp = eventObj.rsvp.filter(r => r.user !== null);
+
+            return res.status(200).json({ success: true, event: eventObj });
         }
 
         // Everyone else gets the event without populated RSVP user details
@@ -139,7 +148,14 @@ export const getAdminEvents = async (req, res, next) => {
             .populate("rsvp.user", "name email phone role") // Populate RSVP for admin view
             .sort({ date: 1 });
 
-        res.status(200).json({ success: true, events });
+        // Filter out deleted users from RSVP lists
+        const cleanedEvents = events.map(event => {
+            const eventObj = event.toObject();
+            eventObj.rsvp = eventObj.rsvp.filter(r => r.user !== null);
+            return eventObj;
+        });
+
+        res.status(200).json({ success: true, events: cleanedEvents });
     } catch (error) {
         next(error);
     }

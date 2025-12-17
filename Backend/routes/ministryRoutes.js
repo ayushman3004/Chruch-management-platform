@@ -22,6 +22,6 @@ router.route("/")
 router.route("/:id")
     .get(isAuthenticated, authorizeRoles("member"), getMinistry)
     .put(isAuthenticated, authorizeRoles("member"), updateMinistry)
-    .delete(isAuthenticated, authorizeRoles("member"), deleteMinistry);
+    .delete(isAuthenticated, authorizeRoles("member", "admin"), deleteMinistry);
 
 export default router;

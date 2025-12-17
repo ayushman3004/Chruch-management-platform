@@ -210,7 +210,7 @@ const Events = () => {
     return (
         <div className="min-h-screen bg-slate-950 relative overflow-x-hidden">
             <div className="fixed inset-0 z-0">
-                <img src={eventsBg} alt="Background" className="w-full h-full object-cover opacity-50" />
+                <img src="https://www.vancopayments.com/hs-fs/hubfs/Congregation%20Gathering%20in%20Sanctuary%20for%20a%20Church%20Event.jpg?width=1600&height=1066&name=Congregation%20Gathering%20in%20Sanctuary%20for%20a%20Church%20Event.jpg" alt="Background" className="w-full h-full object-cover opacity-50" />
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/80"></div>
             </div>
 

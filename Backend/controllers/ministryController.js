@@ -68,10 +68,21 @@ export const updateMinistry = async (req, res, next) => {
 // Delete Ministry
 export const deleteMinistry = async (req, res, next) => {
     try {
-        const ministry = await Ministry.findOne({
-            _id: req.params.id,
-            owner: req.session.user.id
-        });
+        // Check if user is admin
+        const isAdmin = req.session.user.role === 'admin';
+
+        let ministry;
+
+        if (isAdmin) {
+            // Admins can delete any ministry
+            ministry = await Ministry.findById(req.params.id);
+        } else {
+            // Regular members can only delete their own ministries
+            ministry = await Ministry.findOne({
+                _id: req.params.id,
+                owner: req.session.user.id
+            });
+        }
 
         if (!ministry) {
             return res.status(404).json({ message: "Ministry not found or access denied" });
